@@ -5,7 +5,6 @@ plugins {
 }
 
 
-
 version "0.1"
 group "account.api"
 
@@ -13,10 +12,22 @@ repositories {
     mavenCentral()
     maven { url "https://jcenter.bintray.com" }
 }
+sourceSets {
+    integrationTest {
+        java {
+            compileClasspath += main.output + test.output
+            runtimeClasspath += main.output + test.output
+            srcDir file('src/integration-test/java')
+        }
+        resources.srcDir file('src/integration-test/resources')
+    }
+}
 
 configurations {
-    // for dependencies that are needed for development only
-    developmentOnly 
+    developmentOnly
+    integrationTestCompile.extendsFrom testCompile
+    integrationTestRuntime.extendsFrom testRuntime
+    integrationTestImplementation.extendsFrom testImplementation
 }
 
 dependencies {
@@ -29,15 +40,40 @@ dependencies {
     implementation "io.micronaut:micronaut-runtime"
     implementation "io.micronaut:micronaut-http-server-netty"
     implementation "io.micronaut:micronaut-http-client"
+    implementation 'io.micronaut.configuration:micronaut-jdbc-hikari:1.2.0'
+    implementation "io.micronaut.configuration:micronaut-hibernate-jpa"
+    runtime 'com.h2database:h2'
     runtimeOnly "ch.qos.logback:logback-classic:1.2.3"
     testAnnotationProcessor platform("io.micronaut:micronaut-bom:$micronautVersion")
     testAnnotationProcessor "io.micronaut:micronaut-inject-java"
     testImplementation platform("io.micronaut:micronaut-bom:$micronautVersion")
     testImplementation "org.junit.jupiter:junit-jupiter-api"
     testImplementation "io.micronaut.test:micronaut-test-junit5"
+    testImplementation "org.mockito:mockito-core:2.1.0";
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
+
+
+    compileOnly 'org.projectlombok:lombok:1.18.10'
+    annotationProcessor 'org.projectlombok:lombok:1.18.10'
+
+    integrationTestAnnotationProcessor platform("io.micronaut:micronaut-bom:$micronautVersion")
+    integrationTestAnnotationProcessor "io.micronaut:micronaut-inject-java"
+    integrationTestImplementation platform("io.micronaut:micronaut-bom:$micronautVersion")
+    integrationTestImplementation "org.junit.jupiter:junit-jupiter-api"
+
+    integrationTestRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
 }
 
+task integrationTest(type: Test) {
+    useJUnitPlatform()
+    testClassesDirs = sourceSets.integrationTest.output.classesDirs
+    classpath = sourceSets.integrationTest.runtimeClasspath
+    outputs.upToDateWhen { false }
+}
+
+check.dependsOn integrationTest
+integrationTest.mustRunAfter test
+integrationTest.classpath += configurations.developmentOnly
 test.classpath += configurations.developmentOnly
 
 mainClassName = "account.api.Application"
@@ -45,7 +81,7 @@ mainClassName = "account.api.Application"
 test {
     useJUnitPlatform()
 }
-tasks.withType(JavaCompile){
+tasks.withType(JavaCompile) {
     options.encoding = "UTF-8"
     options.compilerArgs.add('-parameters')
 }
