@@ -39,7 +39,7 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public void transfer(@NotNull final Long from, @NotNull final Long to,  @Positive final BigDecimal amount) {
         if (from.equals(to)) {
-            log.info("Igonring attempt to trasnfer money to the same account - From Account ID {} and To Account ID {} ", from, to);
+            log.info("Ignoring attempt to transfer money to the same account - From Account ID {} and To Account ID {} ", from, to);
             return;
         }
         Account fromAcct = getAccount(from);
@@ -66,7 +66,7 @@ public class AccountServiceImpl implements AccountService {
 
     private void subtractFunds(Account acct, @Positive BigDecimal amount){
         if (acct.getBalance().compareTo(amount) < 0) {
-            throw new RuntimeException(String.format("Insuficient funds for Account ID %s: %s available", acct.getId(), acct.getBalance()));
+            throw new RuntimeException(String.format("Insufficient funds for Account ID %s: %s available", acct.getId(), acct.getBalance()));
         }
         acct.setBalance(acct.getBalance().subtract(amount));
     }

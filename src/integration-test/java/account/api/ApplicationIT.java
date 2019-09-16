@@ -105,7 +105,7 @@ public class ApplicationIT {
     private void checkAccountAndWait(Long expectedId, BigDecimal expectedAmount, ResponseWrapper response) throws IOException, InterruptedException {
         Assertions.assertEquals(HttpStatus.ACCEPTED.getCode(), response.statusCode);
         Assertions.assertNotNull(response.body);
-        TimeUnit.SECONDS.sleep(10);//Waiting 10 seconds to make sure that Processor will have enought time to execute
+        TimeUnit.SECONDS.sleep(10);//Waiting 10 seconds to make sure that Processor will have enough time to execute
         Account account = mapper.readValue(callRest("/" + expectedId, "GET").body, Account.class);
         Assertions.assertEquals(0, expectedAmount.compareTo(account.getBalance()));
     }

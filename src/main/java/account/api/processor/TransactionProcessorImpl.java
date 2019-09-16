@@ -30,7 +30,7 @@ public class TransactionProcessorImpl implements TransactionProcessor {
     @Override
     @Scheduled(fixedDelay = "${processor.scheduled.fixeddelay:5s}")
     public void process() {
-        log.info("Checking Qeue for new Transactions");
+        log.info("Checking Queue for new Transactions");
         while (transactionService.hasElements()) {
             final Transaction t = transactionService.getNext();
             t.setStatus(PROCESSING);

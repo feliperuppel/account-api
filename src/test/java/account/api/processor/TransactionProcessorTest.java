@@ -33,7 +33,7 @@ public class TransactionProcessorTest {
 
     @Test
     public void testProcessDeposit(){
-        Transaction t = createTransacion(DEPOSIT);
+        Transaction t = createTransaction(DEPOSIT);
         Assertions.assertEquals(NEW, t.getStatus());
         transactionService.register(t);
         processor.process();
@@ -45,7 +45,7 @@ public class TransactionProcessorTest {
 
     @Test
     public void testProcessWithdraw(){
-        Transaction t = createTransacion(WITHDRAW);
+        Transaction t = createTransaction(WITHDRAW);
         Assertions.assertEquals(NEW, t.getStatus());
         transactionService.register(t);
         processor.process();
@@ -57,7 +57,7 @@ public class TransactionProcessorTest {
 
     @Test
     public void testProcessTransfer(){
-        Transaction t = createTransacion(TRANSFER);
+        Transaction t = createTransaction(TRANSFER);
         Assertions.assertEquals(NEW, t.getStatus());
         transactionService.register(t);
         processor.process();
@@ -69,7 +69,7 @@ public class TransactionProcessorTest {
 
     @Test
     public void testProcessWithErrorFromService(){
-        Transaction t = createTransacion(DEPOSIT);
+        Transaction t = createTransaction(DEPOSIT);
         Assertions.assertEquals(NEW, t.getStatus());
         Mockito.doThrow(new RuntimeException("Mocked Message")).when(accountService).deposit(Mockito.any(), Mockito.any());
         transactionService.register(t);
@@ -81,7 +81,7 @@ public class TransactionProcessorTest {
 
     @Test
     public void testProcessTransferToSameAccount(){
-        Transaction t = createTransacion(TRANSFER);
+        Transaction t = createTransaction(TRANSFER);
         t.setToAccount(t.getFromAccount());
         Mockito.reset(accountService);
         Assertions.assertEquals(NEW, t.getStatus());
@@ -93,7 +93,7 @@ public class TransactionProcessorTest {
         Mockito.verify(repository, Mockito.times(1)).update(t);
     }
 
-    private Transaction createTransacion(Transaction.Operation operation){
+    private Transaction createTransaction(Transaction.Operation operation){
         Transaction t = new Transaction();
         t.setOperation(operation);
         t.setStatus(NEW);
