@@ -48,6 +48,7 @@ First navigates to Root project folder and then
 | POST   | /account/{from}/transfer/{amount}/toaccount/{to} | Perform transfer                                                                          | 
 | GET    | /account/{accountId}/transaction                 | Retrieves history of transactions for specified account (Ordered by the most recent ones) |
 
+ - At this moment none of the requests are demanding *body content*. This choice was made based on the fact that the transactions are really simple, but If these transactions became more complex in the future we can easily create a new endpoint (or even change the existing ones) to receive the json in the body. Micronaut framework uses Jackson to convert Json into Java object in the controller.
 
 ### Transaction Lifecycle:
 	Every transaction will go through these Status.
