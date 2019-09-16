@@ -73,6 +73,6 @@ First navigates to Root project folder and then
 
   - Include Swagger
   - Implement MDC logging to track requests on logs easier
-  - Replace the 'Processor' by some messaging system, maybe kafka
+  - Replace the *Queue + Scheduled  Processor* by some messaging system, maybe kafka
 
 		
